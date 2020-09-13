@@ -1,4 +1,4 @@
-from Classes import City
+from Classes import Group
 from matplotlib import pyplot as plt
 
 def check(pi, pr, city_number, iter):
@@ -43,37 +43,59 @@ def check(pi, pr, city_number, iter):
 city_number = 10
 tup1 = []
 tup2 = []
-for i in range(40):
-    beg = 0
-    end = 100
-    while(end - beg >= 1):
-        if check(i / 200, (end + beg) / 200, 5, 300):
-            beg = (beg + end) / 2
-        else:
-            end = (beg + end) / 2
-    print(str(i) + " , " + str(end))
-    tup1.append(i / 200)
-    tup2.append(end / 100)
+# for i in range(40):
+#     beg = 0
+#     end = 100
+#     while(end - beg >= 1):
+#         if check(i / 200, (end + beg) / 200, 5, 300):
+#             beg = (beg + end) / 2
+#         else:
+#             end = (beg + end) / 2
+#     print(str(i) + " , " + str(end))
+#     tup1.append(i / 200)
+#     tup2.append(end / 100)
     
 
-plt.plot(tup1, tup2, '-')
-plt.title('P_I vs P_R')
-plt.xlabel('P_I')
-plt.ylabel('P_R')
-# plt.text(max(tup1) / 10, max(tup2) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
-plt.show()
-
-# plt.plot(it, numb, '.')
-# plt.title('Recovery')
-# plt.xlabel('time')
-# plt.ylabel('recovered ratio')
-# plt.text(800, max(numb) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
+# plt.plot(tup1, tup2, '-')
+# plt.title('P_I vs P_R')
+# plt.xlabel('P_I')
+# plt.ylabel('P_R')
+# # plt.text(max(tup1) / 10, max(tup2) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
 # plt.show()
 
-# plt.plot(it, num, '.')
+# # plt.plot(it, numb, '.')
+# # plt.title('Recovery')
+# # plt.xlabel('time')
+# # plt.ylabel('recovered ratio')
+# # plt.text(800, max(numb) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
+# # plt.show()
+
+# # plt.plot(it, num, '.')
 # plt.title('Infection')
 # plt.xlabel('time')
 # plt.ylabel('infected ratio')
 # plt.text(800, max(num) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
 
 # plt.show()
+t = []
+infec = []
+rec = []
+g = Group(4, 0.02, 0.02, 1)
+g.begin()
+for i in range(1000):
+    print(i + 1)
+    g.pass_time('S')
+    g.update()
+    t.append(i + 1)
+    infec.append(g.total_infected())
+    rec.append(g.total_recovered())
+
+plt.plot(t, infec, '.')
+plt.title('Infected')
+plt.xlabel('time')
+plt.ylabel('infected ratio')
+# plt.text(800, max(numb) / 2, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr))
+plt.show()
+
+
+
