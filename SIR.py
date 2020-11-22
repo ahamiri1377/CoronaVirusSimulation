@@ -1,115 +1,73 @@
 from Classes import Group
 from matplotlib import pyplot as plt
+import numpy as np
 
-# def check(pi, pr, city_number, iter):
-#     cities = []
-#     for i in range(city_number):
-#         c = City(pi, pr, i)
-#         c.begin()
-#         cities.append(c)
 
-#     #  make_country_in_touch
-#     for city in cities:
-#         for in_touch_city in cities:
-#             if city != in_touch_city:
-#                 city.in_touch_cities.append(in_touch_city)
+res = []
+depth, pr, pi, rate = 3, 0.03, 0.03, 3
 
-#     s = 0
-#     for q in cities:
-#         s += q.size()
-#     print(s)
-
-#     it = []
-#     numb = []
-#     num = []
-
-#     for i in range(iter):
-#         for c in cities:
-#             c.pass_time()
-#         con ,conn = 0, 0
-#         for cc in cities:
-#             cc.update()
-#             con += cc.total_recovered()
-#             conn += cc.total_infection()
+for pr in range(1, 11):
+    for pi in range(1, 11):
+        infec_i = [0] * 1000
+        rec_i = [0] * 1000
+        t = [0] * 1000
+        for counter in range(1):    
+            g = Group(depth, pr / 50, pi / 50, 1, 0.01, 10)
+            g.begin()
+            g.first_child()
+            size = g.size()
+            print(str(pr) + '  ' + str(pi))
+            for i in range(1000):
+                g.pass_time(rate, False)
+                g.update()
+                t[i] = i + 1
+                n = g.total_infected()
+                # infec_i.append(n / size)
+                infec_i[i] = (infec_i[i] * counter + n / size) / (counter + 1)
+                n = g.total_recovered()
+                # rec_i.append(n / size)
+                rec_i[i] = (rec_i[i] * counter + n / size) / (counter + 1)
+        res.append([pr, pi, max(infec_i), max(rec_i)])
         
-#     if con >= 0.9 * s:
-#         return True
-#     else:
-#         return False
+np.savetxt("res_f.csv", np.asarray(res), delimiter=",")         
 
+
+# infec_ii = [0] * 1000
+# rec_ii = [0] * 1000
+
+# for counter in range(1):    
+#     g = Group(depth, pr, pi , 1, 0.01, 10)
+#     g.begin()
+#     g.first_child()
+#     size = g.size()
+#     print(str(pr) + '  ' + str(pi))
+#     for i in range(1000):
+#         # print(i + 1)
+#         g.pass_time(rate, False)
+#         # g.update_childs()
+#         g.update()
+#         # t.append(i + 1)
+#         t[i] = i + 1
+#         n = g.total_infected()
+#         # infec_i.append(n / size)
+#         infec_ii[i] = (infec_ii[i] * counter + n / size) / (counter + 1)
+#         n = g.total_recovered()
+#         # rec_i.append(n / size)
+#         rec_ii[i] = (rec_ii[i] * counter + n / size) / (counter + 1)
+        
         
 
 
-# city_number = 10
-# tup1 = []
-# tup2 = []
-# for i in range(40):
-#     beg = 0
-#     end = 100
-#     while(end - beg >= 1):
-#         if check(i / 200, (end + beg) / 200, 5, 300):
-#             beg = (beg + end) / 2
-#         else:
-#             end = (beg + end) / 2
-#     print(str(i) + " , " + str(end))
-#     tup1.append(i / 200)
-#     tup2.append(end / 100)
     
 
-infec_i = []
-infec_t = []
-rec_i = []
-rec_t = []
-
-depth = int(input())
-pr = float(input())
-pi = float(input())
-g = Group(depth, pr, pi, 1)
-g.begin()
-size = g.size()
-for i in range(2000):
-    print(i + 1)
-    g.pass_time(1, 0, 0)
-    g.update()
-    t.append(i + 1)
-    n, m = g.total_infected()
-    infec_i.append(n / size)
-    infec_t.append(m / size)
-    n, m = g.total_recovered()
-    rec_i.append(n / size)
-    rec_t.append(m / size)
-    
-    
-
-plt.plot(t, infec_i, '-', label='infected')
-plt.plot(t, rec_i, '-', label='recovered')
-plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0.)
-plt.title('Infected and Recovered')
-plt.xlabel('time')
-plt.ylabel('ratio')
-plt.text(1500, 0.5, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr) + r'$\ \  Depth:  $' + str(depth) + r'$\ \  Size:  $' + str(size))
-plt.show()
-
-plt.plot(t, infec_t, '-', label='infected')
-plt.plot(t, rec_t, '-', label='recovered')
-plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0.)
-plt.title('Infected and Recovered')
-plt.xlabel('time')
-plt.ylabel('ratio')
-plt.text(1500, 0.5, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr) + r'$\ \  Depth:  $' + str(depth) + r'$\ \  Size:  $' + str(size))
-plt.show()
-
-plt.plot(t, infec_i, '-', label='infected-1')
-plt.plot(t, rec_i, '-', label='recovered-1')
-plt.plot(t, infec_t, '-', label='infected-2')
-plt.plot(t, rec_t, '-', label='recovered-2')
-plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0.)
-plt.title('Infected and Recovered')
-plt.xlabel('time')
-plt.ylabel('ratio')
-plt.text(1500, 0.5, r'$P_I: $' + str(pi) +r'$\ \  P_R:  $' + str(pr) + r'$\ \  Depth:  $' + str(depth) + r'$\ \  Size:  $' + str(size))
-plt.show()
-
-
-
+# plt.plot(t, infec_i, '-', label='infected')
+# plt.plot(t, rec_i, '-', label='recovered')
+# plt.plot(t, infec_ii, '-', label='infected_p')
+# plt.plot(t, rec_ii, '-', label='recovered_p')
+# plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0.)
+# plt.title('Infected and Recovered')
+# plt.xlabel('time')
+# plt.ylabel('ratio')
+# plt.text(800, 0.2, r'$P_I: $' + str(pi) + '\n' +r'$P_R:  $' + str(pr) + '\n' + r'$Depth:  $' + str(depth) + '\n' + r'$Size:  $' + str(size) + '\n' + r'$t-rate:  $' + str(rate))
+# plt.show()
 
